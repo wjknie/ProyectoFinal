@@ -10,6 +10,7 @@ public class EcoQuestService {
     private Map<String, Mision> misiones;
     private Set<String> puntosEco;
     private Set<String> misionesCompletas;
+    private Set<String> misionesAsignadas;
 
     public EcoQuestService(){
         this.voluntarios = new HashMap<>();
@@ -18,7 +19,7 @@ public class EcoQuestService {
         this.misionesCompletas = new HashSet<>();
     }
 
-    public void RegistrarVoluntario(Voluntario voluntario) {
+    public void registrarVoluntario(Voluntario voluntario) {
         String id = voluntario.getId();
         if(voluntarios.containsKey(id)){
             throw new IllegalArgumentException("El voluntario con id " + id + " ya está registrado.");
@@ -26,7 +27,7 @@ public class EcoQuestService {
         voluntarios.put(voluntario.getId(), voluntario);       
     }
 
-    public void AgregarMision(Mision mision) {
+    public void agregarMision(Mision mision) {
         String id = mision.getId();
         if(misiones.containsKey(id)){
             throw new IllegalArgumentException("La misión con id " + id + " ya existe.");
@@ -35,7 +36,7 @@ public class EcoQuestService {
 
     }
 
-    public void AgregarPuntoEco(String puntoEco) {
+    public void agregarPuntoEco(String puntoEco) {
         if(!puntosEco.add(puntoEco)){
             throw new IllegalArgumentException("El punto eco " + puntoEco + " ya existe.");
         }
@@ -50,11 +51,18 @@ public class EcoQuestService {
         }
     }
 
-    public void AsignarMisionVoluntario(String idVoluntario, String idMision){
-        if(voluntarios.containsKey(idVoluntario)&&(misiones.containsKey(idMision))){
-            Voluntario voluntarios = voluntarios.get(idVoluntario);
-            voluntarios.getMisionesCompletadas().add(idMision);
+    public void asignarMisionVoluntario(String idVoluntario, String idMision){
+        if(!voluntarios.containsKey(idVoluntario)){
+            throw new IllegalArgumentException("El voluntario no existe.");
+        }if(!misiones.containsKey(idMision)){
+            throw new IllegalArgumentException("La misión no existe.");
         }
-    }
-}sss
+        Voluntario v = voluntarios.get(idVoluntario);
+            if(misionesAsignadas.contains(idMision)){
+                throw new IllegalArgumentException("La misión ya fue asignada.");
+        }
+        v.getMisionesCompletadas().add(idMision);
+        }
+    
+}
 
