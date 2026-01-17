@@ -2,7 +2,7 @@ package com.devsenior;
 
 import java.time.LocalDate;
 
-public abstract class Mision {
+public class Mision {
     private String id;
     private String descripcion;
     private String ubicación;

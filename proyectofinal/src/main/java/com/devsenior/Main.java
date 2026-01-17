@@ -2,6 +2,7 @@ package com.devsenior;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        EcoQuestApp app = new EcoQuestApp();
+        app.ejecutar();
     }
 }

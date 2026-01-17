@@ -12,8 +12,10 @@ public class Voluntario {
 
     public Voluntario(String nombre, String id, List<String> habilidades) {
         this.nombre = nombre;
-        this.id = id;
-        this.habilidades = habilidades;
+        this.id = EcoQuestService.normalizarTexto(id);
+        this.habilidades = habilidades.stream()
+            .map(EcoQuestService::normalizarTexto)
+            .toList();
         this.misionesCompletadas = new HashSet<>();
     }
 
