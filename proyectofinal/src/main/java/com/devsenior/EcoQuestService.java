@@ -82,4 +82,13 @@ public class EcoQuestService {
         .filter(v -> v.getHabilidades().contains(habilidadNoemalizada))
         .toList();
     }
+
+    public void mostrarTopVoluntarios(){
+        voluntarios.values().stream()
+        .sorted((v1, v2) -> Integer.compare(v2.getMisionesCompletadas().size(), v1.getMisionesCompletadas().size()))
+        .limit(3)
+        .forEach(v ->
+            System.out.println(v.getNombre() + " - Misiones: " +
+            v.getMisionesCompletadas().size()));
+    }
 }
