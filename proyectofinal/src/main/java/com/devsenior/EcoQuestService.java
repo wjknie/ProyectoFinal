@@ -91,4 +91,27 @@ public class EcoQuestService {
             System.out.println(v.getNombre() + " - Misiones: " +
             v.getMisionesCompletadas().size()));
     }
+
+    public void mostrarVolunarios(){
+        voluntarios.values().forEach(v -> System.out.println(
+            v.getId()+ " | "+
+            v.getNombre() + " | Misiones completadas: " +
+            v.getMisionesCompletadas().size()
+        )); 
+    }
+
+    public void mostrarMisionesCompletadas(){
+        voluntarios.values().forEach(v -> {
+            if(!v.getMisionesCompletadas().isEmpty()){
+                System.out.println("Voluntario: " + v.getNombre());
+                v.getMisionesCompletadas().forEach(id -> System.out.println(" - "+id));
+            }
+        });
+    }
+
+    public void mostrarMisionesPendientes(){
+        misiones.values().stream()
+        .filter(m -> !misionesCompletas.contains(m.getId()))
+        .forEach(m -> System.out.println(m.getId()+" - "+m.getDescripcion()));
+    }
 }
