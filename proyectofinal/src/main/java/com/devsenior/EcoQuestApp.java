@@ -115,7 +115,7 @@ public class EcoQuestApp {
                 case 8:
                     System.out.println("Cerrando el programa...");
             }
-            sc.close();
         } while (opcion != 8);
+        sc.close();
     }
 }
