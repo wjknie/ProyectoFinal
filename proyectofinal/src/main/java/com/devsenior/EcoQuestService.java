@@ -1,7 +1,6 @@
 package com.devsenior;
 
 import java.text.Normalizer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,11 +19,13 @@ public class EcoQuestService {
         this.misiones = new HashMap<>();
         this.puntosEco = new HashSet<>();
         this.misionesCompletas = new HashSet<>();
+        this.misionesAsignadas = new HashSet<>();
+
     }
 
     public static String normalizarTexto(String texto){
         return Normalizer.normalize(texto, Normalizer.Form.NFD)
-        .replaceAll("\\p{InCombiningDiacriticalMarks}+", "texto")
+        .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
         .toLowerCase()
         .trim();
     }
@@ -35,6 +36,7 @@ public class EcoQuestService {
             throw new IllegalArgumentException("El voluntario con id " + id + " ya está registrado.");
         }
         voluntarios.put(voluntario.getId(), voluntario);
+        System.out.println("Voluntario registrado exitosamente.");
     }
 
     public void agregarMision(Mision mision) {
@@ -44,6 +46,11 @@ public class EcoQuestService {
         }
         misiones.put(mision.getId(), mision);
 
+    }
+
+    public static boolean dificultadValida(String dificultad){
+        return Set.of("baja", "media", "alta")
+        .contains(normalizarTexto(dificultad));
     }
 
     public void agregarPuntoEco(PuntoEco puntoEco) {
@@ -92,7 +99,7 @@ public class EcoQuestService {
             v.getMisionesCompletadas().size()));
     }
 
-    public void mostrarVolunarios(){
+    public void mostrarVoluntarios(){
         voluntarios.values().forEach(v -> System.out.println(
             v.getId()+ " | "+
             v.getNombre() + " | Misiones completadas: " +

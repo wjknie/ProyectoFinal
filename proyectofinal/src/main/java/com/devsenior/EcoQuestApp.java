@@ -1,7 +1,9 @@
 package com.devsenior;
 
 import java.util.Scanner;
+import java.time.format.DateTimeParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class EcoQuestApp {
@@ -26,65 +28,126 @@ public class EcoQuestApp {
 
             switch (opcion) {
                 case 1:
-                    System.out.println("Ingrese ID del Voluntario: ");
-                    String idVoluntario = sc.nextLine();
+                    try {
                     System.out.println("Ingrese el nombre del Voluntario: ");
                     String nombreVoluntario = sc.nextLine();
+                    
+                    System.out.println("Ingrese ID del Voluntario: ");
+                    String idVoluntario = sc.nextLine();
+
                     System.out.println("Ingrese las habilidades del voluntario separadas por comas: ");
                     String habilidades = sc.nextLine();
+
                     List<String> habilidadesTexto = List.of(habilidades.split(","));
-                    Voluntario voluntario = new Voluntario(idVoluntario, nombreVoluntario, habilidadesTexto);
+                    Voluntario voluntario = new Voluntario(nombreVoluntario, idVoluntario, habilidadesTexto);
+
                     service.registrarVoluntario(voluntario);
+                    System.out.println("Voluntario registrado.");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                     break;
 
                 case 2:
-                    System.out.println("Ingrese el ID de la misión: ");
+                    try{
+                        System.out.println("Ingrese el ID de la misión: ");
                     String idMision = sc.nextLine();
                     System.out.println("Ingrese la descripción de la misión: ");
                     String descripcionMision = sc.nextLine();
                     System.out.println("Ingrese la ubicación de la misión: ");
                     String ubicacionMision = sc.nextLine();
-                    System.out.println("Ingrese la fecha de la misión: ");
-                    String fechaMision = sc.nextLine();
-                    LocalDate fecha = LocalDate.parse(fechaMision);
-                    System.out.println("Ingrese el nivel de dificultad: ");
-                    String nivelDificultad = sc.nextLine();
+
+                    LocalDate fecha = null;
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    while(fecha == null){
+                        System.out.println("Ingrese la fecha de la misión (DD/MM/AAAA): ");
+                        String fechaMision = sc.nextLine();
+
+                    try{
+                        fecha = LocalDate.parse(fechaMision, formatter);
+                    }catch (DateTimeParseException e){
+                        System.out.println("Formato de fecha incorrecto. Use el formato DD/MM/AAAA");
+                    }
+                }
+
+                String nivelDificultad = null;
+
+                    while (nivelDificultad == null) {
+                        System.out.println("Ingrese el nivel de dificultad (baja/media/alta): ");
+                        String entradaDificultad = sc.nextLine();
+
+                        if(EcoQuestService.dificultadValida(entradaDificultad)){
+                        nivelDificultad = EcoQuestService.normalizarTexto(entradaDificultad);
+                    }else{
+                        System.out.println("Nivel de dificultad inválido. Usa: baja, media o alta.");
+                    }
+                    }
+                    
                     Mision mision = new Mision(idMision, descripcionMision, ubicacionMision, fecha, nivelDificultad);
                     service.agregarMision(mision);
+                    } catch(IllegalArgumentException e){
+                        System.out.println(e.getMessage());
+                    }
+                    
                     break;
 
                 case 3:
-                    System.out.println("Ingrese el ID del punto ecológico: ");
-                    String idPuntoEco = sc.nextLine();
-                    System.out.println("Ingrese el nombre del punto ecológico: ");
-                    String nombrePuntoEco = sc.nextLine();
-                    System.out.println("Ingrese el tipo del punto ecológico: ");
-                    String tipoPuntoEco = sc.nextLine();
-                    System.out.println("Ingrese las coordenadas del punto ecológico: ");
-                    String coordenadasPuntoEco = sc.nextLine();
-                    PuntoEco puntoEco = new PuntoEco(idPuntoEco, nombrePuntoEco, tipoPuntoEco, coordenadasPuntoEco);
-                    service.agregarPuntoEco(puntoEco);
+                    try{
+                        System.out.println("Ingrese el ID del punto ecológico: ");
+                        String idPuntoEco = sc.nextLine();
+                        System.out.println("Ingrese el nombre del punto ecológico: ");
+                        String nombrePuntoEco = sc.nextLine();
+                        System.out.println("Ingrese el tipo del punto ecológico: ");
+                        String tipoPuntoEco = sc.nextLine();
+                        System.out.println("Ingrese las coordenadas del punto ecológico: ");
+                        String coordenadasPuntoEco = sc.nextLine();
+                        PuntoEco puntoEco = new PuntoEco(idPuntoEco, nombrePuntoEco, tipoPuntoEco, coordenadasPuntoEco);
+                        service.agregarPuntoEco(puntoEco);
+                    }catch(IllegalArgumentException e){
+                        System.out.println(e.getMessage());
+                    }
                     break;
 
                 case 4:
-                    System.out.println("Ingrese el ID del voluntario: ");
-                    idVoluntario = sc.nextLine();
-                    System.out.println("Ingrese el ID de la misión: ");
-                    idMision = sc.nextLine();
-                    service.asignarMisionVoluntario(idVoluntario, idMision);
+                    try{
+                        System.out.println("Ingrese el ID del voluntario: ");
+                        String idVoluntario = sc.nextLine();
+
+                        System.out.println("Ingrese el ID de la misión: ");
+                        String idMision = sc.nextLine();
+
+                        service.asignarMisionVoluntario(idVoluntario, idMision);
+                        System.out.println("Voluntario asignado a la misión.");
+                    }catch(IllegalArgumentException e){
+                        System.out.println(e.getMessage());
+                    }
                     break;
 
                 case 5:
-                    System.out.println("Ingrese el ID de la misión completada: ");
-                    idMision = sc.nextLine();
-                    service.completarMision(idMision);
-                    break;
+                    try{
+                        System.out.println("Ingrese el ID de la misión completada: ");
+                        String idMision = sc.nextLine();
 
+                        service.completarMision(idMision);
+                    }catch(IllegalArgumentException e){
+                        System.out.println(e.getMessage());
+                    }
+                    break;
                 case 6:
                     System.out.println("Ingrese la habilidad que desea buscar: ");
-                    habilidades = sc.nextLine();
+                    String habilidades = sc.nextLine();
+
                     String habilidadNormalizada = EcoQuestService.normalizarTexto(habilidades);
-                    service.voluntarioPorHabilidades(habilidadNormalizada);
+                    
+                    List<Voluntario> resultados = service.voluntarioPorHabilidades(habilidadNormalizada);
+                    
+                    if(resultados.isEmpty()){
+                        System.out.println("No se encontraron voluntarios con esa habilidad.");
+                    } else {
+                        for(Voluntario v : resultados){
+                            System.out.println(v);
+                        }
+                    }
                     break;
 
                 case 7:
@@ -101,7 +164,7 @@ public class EcoQuestApp {
                             service.mostrarTopVoluntarios();
                             break;
                         case 2:
-                            service.mostrarVolunarios();
+                            service.mostrarVoluntarios();
                             break;
                         case 3:
                             service.mostrarMisionesCompletadas();
@@ -112,6 +175,8 @@ public class EcoQuestApp {
                         default:
                             break;
                     }
+
+                    break;
                 case 8:
                     System.out.println("Cerrando el programa...");
             }
